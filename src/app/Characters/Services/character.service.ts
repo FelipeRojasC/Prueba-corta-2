@@ -16,26 +16,19 @@ export class CharacterService {
   constructor() {
 
   }
-  async getCharacters(currentPage: number) {
+  async getCharacters(currentPage: number,name: string) {
     try {
+      if(name ==""){
       const response = await firstValueFrom(
         this.http.get<ResponseAPIGetAll>(`${this.apiUrl}/?page=${currentPage}`)
       );
       return response.results;
-    } catch (error) {
-      console.log(error);
-      let e = error as HttpErrorResponse;
-      this.errors.push(e.message);
-      return Promise.reject(error);
-    }
-  }
-
-  async searchCharacters(name: string) {
-    try {
+    }else{
       const response = await firstValueFrom(
-        this.http.get<ResponseAPIGetAll>(`${this.apiUrl}/?name=${name}`)
+        this.http.get<ResponseAPIGetAll>(`${this.apiUrl}/?page=${currentPage}&name=${name}`)
       );
       return response.results;
+    }
     } catch (error) {
       console.log(error);
       let e = error as HttpErrorResponse;
@@ -43,11 +36,19 @@ export class CharacterService {
       return Promise.reject(error);
     }
   }
-  async getmaxPage() {
+  async getmaxPage(name: string) {
+    if(name ==""){
     const response = await firstValueFrom(
         this.http.get<ResponseAPIGetAll>(`${this.apiUrl}/?page=1`)
       );
       const maxPage = response.info.pages;
       return maxPage;
+    }else{
+      const response = await firstValueFrom(
+        this.http.get<ResponseAPIGetAll>(`${this.apiUrl}/?page=1&name=${name}`)
+      );
+      const maxPage = response.info.pages;
+      return maxPage;
+    }
   }
 }

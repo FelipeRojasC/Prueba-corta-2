@@ -19,11 +19,14 @@ export class CharacterListComponent {
   private characterService: CharacterService = inject(CharacterService);
   public characters: Result[] = [];
   @Input() currentPage: number = 1;
+  @Input() searchQuery: string = ''; // Nombre de búsqueda
 
   private page: number;
+  private search: string;
 
   constructor() {
     this.page = this.currentPage;
+    this.search= this.searchQuery;
   }
   ngOnInit(): void {
     this.getCharacters();
@@ -33,11 +36,14 @@ export class CharacterListComponent {
       this.page = this.currentPage;
       this.getCharacters();
     }
+    if (changes['searchQuery']) {
+      this.search = this.searchQuery;
+      this.getCharacters();
+    }
   }
   getCharacters() {
-
     this.characterService
-      .getCharacters(this.page)
+      .getCharacters(this.page, this.search)
       .then((characters) => {
         this.characters = characters;
       })

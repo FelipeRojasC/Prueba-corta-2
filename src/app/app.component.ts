@@ -5,11 +5,12 @@ import { initFlowbite } from 'flowbite';
 import { CharacterListComponent } from './Characters/Components/character-list/character-list.component';
 import { CharacterService } from './Characters/Services/character.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-root',
-  imports: [CharacterListComponent, CommonModule],
+  imports: [CharacterListComponent, CommonModule, FormsModule],
   providers: [CharacterListComponent, CharacterService],
   standalone: true,
   templateUrl: './app.component.html',
@@ -22,21 +23,26 @@ export class AppComponent implements OnInit {
   searchQuery: string = ''; // Valor del campo de búsqueda
   static currentPage: number;
 
-  constructor(private characterList: CharacterListComponent, private characterService: CharacterService) {}
+  constructor(
+    private characterList: CharacterListComponent,
+    private characterService: CharacterService
+  ) {}
 
   ngOnInit(): void {
     initFlowbite();
   }
+  // Método para manejar la búsqueda
 
   prev(page: number) {
     if (page > 1) this.currentPage = page;
     else this.currentPage = 1;
     this.characterList.currentPage = this.currentPage;
+    this.characterList.searchQuery = this.searchQuery;
     this.characterList.getCharacters();
   }
   next(page: number) {
     this.characterService
-      .getmaxPage()
+      .getmaxPage(this.searchQuery)
       .then((maxPage) => {
         if (page > maxPage) {
           this.currentPage = maxPage;
@@ -44,10 +50,17 @@ export class AppComponent implements OnInit {
           this.currentPage = page;
         }
         this.characterList.currentPage = this.currentPage;
+        this.characterList.searchQuery = this.searchQuery;
         this.characterList.getCharacters();
       })
       .catch((error) => {
         console.error('Error al obtener el máximo de páginas:', error);
       });
+  }
+  onSearch() {
+    this.currentPage=1;
+    this.characterList.currentPage = this.currentPage;
+    this.characterList.searchQuery = this.searchQuery;
+    this.characterList.getCharacters();
   }
 }
