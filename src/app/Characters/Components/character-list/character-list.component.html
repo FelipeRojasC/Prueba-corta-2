@@ -1,0 +1,12 @@
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-16">
+  <div *ngFor="let character of characters" class="flex flex-col items-center justify-center bg-gray-800 p-4 rounded-lg shadow-lg">
+    <a>
+      <img class="w-full object-cover rounded-full mb-4" [src]="character.image" alt="{{character.name}}">
+      <p class="text-center text-white text-sm">{{character.name}}</p>
+      <p class="text-center text-white text-sm">{{character.status}}</p>
+      <p class="text-center text-white text-sm">{{character.species}}</p>
+      <p class="text-center text-white text-sm">{{character.location.name}}</p>
+    </a>
+  </div>
+</div>
